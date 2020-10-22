@@ -13,6 +13,7 @@
 #include <string.h>
 #include <math.h>
 #include <time.h>
+#include <errno.h>
 
 ///////////////////////////////////////////////////////////////////////////////////
 //
@@ -92,7 +93,12 @@ bool Rmw_Write8BitImg2BmpFile(BYTE *pImg,int width,int height,const char * filen
 	BYTE p[4],*pCur;
 
     // Open File
-    if((fp=fopen(filename,"w+b"))==NULL) {  return false; }
+    errno = 0;
+    if ((fp=fopen(filename,"w+b"))==NULL) 
+    {
+        printf("fopen error: %d\n", fp, errno);
+        return false; 
+    }
 	// Fill the FileHeader
 	FileHeader.bfType= ((WORD) ('M' << 8) | 'B');
 	FileHeader.bfOffBits=sizeof(BITMAPFILEHEADER)+sizeof(BITMAPINFOHEADER)+256*4L;
